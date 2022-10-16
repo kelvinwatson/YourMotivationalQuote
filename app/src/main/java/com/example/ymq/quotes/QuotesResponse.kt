@@ -8,6 +8,6 @@ import kotlinx.serialization.Serializable
 data class QuotesResponse(
     val status: Int,
     val message: String?,
-    val count: Int,
-    val quotes: List<Quote>
+    val count: Int?,
+    val quotes: List<Quote>? = null
 ) : Response

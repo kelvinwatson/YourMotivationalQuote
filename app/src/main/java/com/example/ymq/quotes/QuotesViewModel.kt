@@ -12,13 +12,16 @@ class QuotesViewModel(
     private val quotesRepository: QuotesRepository = QuotesRepositoryImpl()
 ) : ViewModel() {
 
-    val pageState: StateFlow<QuotesScreenState> = quotesRepository.quotesStream.map { quotesResponse ->
-
-        QuotesScreenState.Ready(quotesResponse!!.quotes)
-
-    }.stateIn(
-        scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(5_000),
-        initialValue = QuotesScreenState.Loading
-    )
+    val pageState: StateFlow<QuotesScreenState> =
+        quotesRepository.quotesStream.map { quotesResponse ->
+            if (quotesResponse.status == 200 && !quotesResponse.quotes.isNullOrEmpty()) {
+                QuotesScreenState.Ready(quotesResponse.quotes)
+            } else {
+                QuotesScreenState.Error(quotesResponse.message)
+            }
+        }.stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5_000),
+            initialValue = QuotesScreenState.Loading
+        )
 }

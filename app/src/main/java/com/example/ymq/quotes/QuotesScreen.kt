@@ -1,5 +1,6 @@
 package com.example.ymq.quotes
 
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -45,9 +46,15 @@ fun QuotesScreen(navController: NavController, quotesPageState: QuotesScreenStat
             LazyVerticalGrid(
                 columns = GridCells.Adaptive(minSize = 128.dp)
             ) {
-                items<Quote>(quotesPageState.quotes) { quoteModel ->
-                    Text("quotesPageState:$quoteModel")
-
+                items<Quote>(quotesPageState.quotes) { quote ->
+                    Column {
+                        quote.text?.run {
+                            Text(this)
+                        }
+                        quote.author?.run {
+                            Text(this)
+                        }
+                    }
                 }
             }
         }
