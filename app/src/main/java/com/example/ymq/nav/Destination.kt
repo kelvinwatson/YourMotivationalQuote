@@ -9,10 +9,10 @@ import com.example.ymq.R
 import com.example.ymq.nav.Routes.ROUTE_QUOTES
 import com.example.ymq.nav.Routes.ROUTE_SETTINGS
 
-sealed class Screen(val route: String, @StringRes val labelRes: Int, val icon: ImageVector) {
-    object Quotes : Screen(ROUTE_QUOTES, R.string.quotes, Icons.Filled.List)
+sealed class Destination(val route: String, @StringRes val labelRes: Int, val icon: ImageVector) {
+    object QuotesDestination : Destination(ROUTE_QUOTES, R.string.quotes, Icons.Filled.List)
 //    object QuoteOfTheDay : Screen(ROUTE_QOTD, R.string.quote_of_the_day, Icons.Filled.Star)
-    object Settings : Screen(ROUTE_SETTINGS, R.string.settings, Icons.Filled.Settings)
+    object SettingsDestination : Destination(ROUTE_SETTINGS, R.string.settings, Icons.Filled.Settings)
 }
 
 object Routes {

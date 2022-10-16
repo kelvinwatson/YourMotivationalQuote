@@ -7,27 +7,23 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Email
-import androidx.compose.material.icons.filled.Face
-import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.ymq.nav.QBottomNavigationBar
-import com.example.ymq.nav.Screen
-import com.example.ymq.quotes.Quotes
-import com.example.ymq.settings.Settings
+import com.example.ymq.nav.QNavHost
+import com.example.ymq.nav.Destination
+import com.example.ymq.quotes.QuotesViewModel
 import com.example.ymq.ui.theme.YourMotivationalQuoteTheme
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -49,9 +45,10 @@ class MainActivity : ComponentActivity() {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainContent() {
+
     val screens = listOf(
-        Screen.Quotes,
-        Screen.Settings
+        Destination.QuotesDestination,
+        Destination.SettingsDestination
     )
 
     val navController = rememberNavController()
@@ -60,7 +57,7 @@ fun MainContent() {
         QBottomNavigationBar {
             val navBackStackEntry by navController.currentBackStackEntryAsState()
             val currentDestination = navBackStackEntry?.destination
-            val onClick = { screen: Screen ->
+            val onClick = { screen: Destination ->
                 navController.navigate(screen.route) {
                     // Pop up to the start destination of the graph to
                     // avoid building up a large stack of destinations
@@ -88,14 +85,7 @@ fun MainContent() {
         }
     }) { innerPadding ->
 
-        NavHost(
-            navController = navController,
-            startDestination = Screen.Quotes.route,
-            Modifier.padding(innerPadding)
-        ) {
-            composable(Screen.Quotes.route) { Quotes(navController) }
-            composable(Screen.Settings.route) { Settings(navController) }
-        }
+        QNavHost(navController, Modifier.padding(innerPadding))
     }
 }
 
