@@ -12,6 +12,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -26,7 +27,9 @@ import kotlinx.coroutines.launch
 @Composable
 fun QuotesRoute(
     navController: NavController,
-    viewModel: QuotesViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
+    viewModel: QuotesViewModel = androidx.lifecycle.viewmodel.compose.viewModel(
+        factory = QuotesViewModel.Factory(resources = LocalContext.current.resources)
+    )
 ) {
     val pageState by viewModel.pageState.collectAsStateWithLifecycle()
 
@@ -43,20 +46,26 @@ fun QuotesScreen(navController: NavController, quotesPageState: QuotesScreenStat
         is QuotesScreenState.Loading -> CircularProgressIndicator(modifier = Modifier.padding(16.dp))
         is QuotesScreenState.Ready -> {
 
-            LazyVerticalGrid(
-                columns = GridCells.Adaptive(minSize = 128.dp)
-            ) {
-                items<Quote>(quotesPageState.quotes) { quote ->
-                    Column {
-                        quote.text?.run {
-                            Text(this)
-                        }
-                        quote.author?.run {
-                            Text(this)
-                        }
-                    }
-                }
+            Column {
+
+                Text(text = quotesPageState.imageUrl)
+                Text(text = quotesPageState.quote.text!!)
+                Text(text = quotesPageState.quote.author!!)
             }
+//            LazyVerticalGrid(
+//                columns = GridCells.Adaptive(minSize = 128.dp)
+//            ) {
+//                items<Quote>(quotesPageState.quote) { quote ->
+//                    Column {
+//                        quote.text?.run {
+//                            Text(this)
+//                        }
+//                        quote.author?.run {
+//                            Text(this)
+//                        }
+//                    }
+//                }
+//            }
         }
     }
 

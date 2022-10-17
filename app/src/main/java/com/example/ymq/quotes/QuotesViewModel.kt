@@ -1,27 +1,40 @@
 package com.example.ymq.quotes
 
+import android.content.res.Resources
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import com.example.ymq.R
 import com.example.ymq.pagestate.QuotesScreenState
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.stateIn
+import com.example.ymq.remote.QuotesRepository
+import com.example.ymq.remote.QuotesRepositoryImpl
+import kotlinx.coroutines.flow.*
 
 class QuotesViewModel(
+    private val resources: Resources,
     private val quotesRepository: QuotesRepository = QuotesRepositoryImpl()
 ) : ViewModel() {
 
     val pageState: StateFlow<QuotesScreenState> =
-        quotesRepository.quotesStream.map { quotesResponse ->
-            if (quotesResponse.status == 200 && !quotesResponse.quotes.isNullOrEmpty()) {
-                QuotesScreenState.Ready(quotesResponse.quotes)
+        quotesRepository.contentStream.map { content ->
+            if (content.quotesResponse.status == 200 && !content.quotesResponse.quotes.isNullOrEmpty()) {
+                QuotesScreenState.Ready(content.quotesResponse.quotes[0], content.imageUrl)
             } else {
-                QuotesScreenState.Error(quotesResponse.message)
+                QuotesScreenState.Error(content.quotesResponse.message)
             }
+        }.catch { cause ->
+            QuotesScreenState.Error(cause.message ?: resources.getString(R.string.error_generic))
         }.stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5_000),
             initialValue = QuotesScreenState.Loading
         )
+
+    class Factory(
+        private val resources: Resources,
+        private val repository: QuotesRepository = QuotesRepositoryImpl()
+    ) : ViewModelProvider.Factory {
+        override fun <T : ViewModel> create(modelClass: Class<T>): T =
+            QuotesViewModel(resources, repository) as T
+    }
 }

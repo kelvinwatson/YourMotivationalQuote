@@ -1,4 +1,4 @@
-package com.example.ymq.quotes
+package com.example.ymq.remote
 
 import com.example.ymq.model.Quote
 import com.example.ymq.remote.Response

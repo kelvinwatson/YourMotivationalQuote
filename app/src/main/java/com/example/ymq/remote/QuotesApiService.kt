@@ -1,4 +1,4 @@
-package com.example.ymq.quotes
+package com.example.ymq.remote
 
 interface QuotesApiService {
 

@@ -1,7 +1,5 @@
-package com.example.ymq.quotes
+package com.example.ymq.remote
 
-import com.example.ymq.remote.ApiEndpoints
-import com.example.ymq.remote.KtorSingletons
 import io.ktor.client.*
 import io.ktor.client.features.*
 import io.ktor.client.request.*

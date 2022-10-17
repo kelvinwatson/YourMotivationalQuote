@@ -8,5 +8,5 @@ sealed interface QuotesScreenState {
 
     data class Error(val message: String?) : QuotesScreenState
 
-    data class Ready(val quotes: List<Quote>) : QuotesScreenState
+    data class Ready(val quote: Quote, val imageUrl: String) : QuotesScreenState
 }

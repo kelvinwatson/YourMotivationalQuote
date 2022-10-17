@@ -3,4 +3,5 @@
     <string name="quotes">Quotes</string>
     <string name="quote_of_the_day">Quote of the day</string>
     <string name="settings">settings</string>
+    <string name="error_generic">An error occurred. Please try again later.</string>
 </resources>
